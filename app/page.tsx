@@ -8,10 +8,14 @@ import { Badge } from "./_components/ui/badge"
 import { Avatar, AvatarImage } from "./_components/ui/avatar"
 import { db } from "./_lib/prisma"
 import { BarbershopItem } from "./_components/BarbershopItem"
+import { Footer } from "./_components/Footer"
 
 const Home = async () => {
   // chamar banco de dados
   const barbershops = await db.barbershop.findMany({})
+  const popularBarbershops = await db.barbershop.findMany({
+    orderBy: { name: "desc" },
+  })
 
   return (
     <div>
@@ -29,7 +33,50 @@ const Home = async () => {
             <SearchIcon />
           </Button>
         </div>
+      </div>
 
+      <div className="pl-5">
+        {/* BUSCA RÁPIDA */}
+        <div className="mt-6 flex items-center gap-3 overflow-x-scroll pb-2">
+          <Button className="space-x-2" variant={"secondary"}>
+            <Image src="/cabelo.svg" width={16} height={16} alt="Cabelo" />
+            <span>Cabelo</span>
+          </Button>
+          <Button className="space-x-2" variant={"secondary"}>
+            <Image src="/barba.svg" width={16} height={16} alt="Barba" />
+            <span>Barba</span>
+          </Button>
+          <Button className="space-x-2" variant={"secondary"}>
+            <Image
+              src="/acabamento.svg"
+              width={16}
+              height={16}
+              alt="Acabamento"
+            />
+            <span>Acabamento</span>
+          </Button>
+          <Button className="space-x-2" variant={"secondary"}>
+            <Image
+              src="/hidratacao.svg"
+              width={16}
+              height={16}
+              alt="Hidratação"
+            />
+            <span>Hidratação</span>
+          </Button>
+          <Button className="space-x-2" variant={"secondary"}>
+            <Image
+              src="/sobrancelha.svg"
+              width={16}
+              height={16}
+              alt="Sobrancelha"
+            />
+            <span>Sobrancelha</span>
+          </Button>
+        </div>
+      </div>
+
+      <div className="p-5">
         {/* BANNER */}
         <div className="relative mt-6 h-40 w-full overflow-hidden rounded-xl">
           <Image
@@ -68,17 +115,31 @@ const Home = async () => {
             </div>
           </CardContent>
         </Card>
+      </div>
 
+      <div className="pl-5">
         {/* RECOMENDADOS */}
         <h2 className="mb-3 mt-6 text-xs font-semibold uppercase text-zinc-400">
           Recomendados
         </h2>
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="flex gap-4 overflow-x-auto pb-2 pr-5">
           {barbershops.map((barbershop) => (
             <BarbershopItem key={barbershop.id} barbershop={barbershop} />
           ))}
         </div>
+
+        {/* POPULARES */}
+        <h2 className="mb-3 mt-6 text-xs font-semibold uppercase text-zinc-400">
+          Populares
+        </h2>
+        <div className="flex gap-4 overflow-x-auto pb-2 pr-5">
+          {popularBarbershops.map((barbershop) => (
+            <BarbershopItem key={barbershop.id} barbershop={barbershop} />
+          ))}
+        </div>
       </div>
+
+      <Footer />
     </div>
   )
 }
