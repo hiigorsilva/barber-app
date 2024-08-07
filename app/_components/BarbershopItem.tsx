@@ -24,7 +24,7 @@ export const BarbershopItem = ({ barbershop }: BarbershopItemProps) => {
 
           <Badge
             variant={"secondary"}
-            className="absolute left-2 top-2 z-10 space-x-1"
+            className="absolute left-2 top-2 z-10 space-x-1 border border-zinc-50/5"
           >
             <StarIcon size={12} className="fill-primary text-primary" />
             <span className="text-xs font-semibold">4,8</span>
