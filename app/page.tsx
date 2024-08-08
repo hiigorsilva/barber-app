@@ -5,7 +5,6 @@ import { Button } from "./_components/ui/button"
 import { Input } from "./_components/ui/input"
 import { db } from "./_lib/prisma"
 import { BarbershopItem } from "./_components/BarbershopItem"
-import { Footer } from "./_components/Footer"
 import { quicksSearchOptions } from "./_constants/search"
 import { BookingItem } from "./_components/BookingItem"
 
@@ -93,8 +92,6 @@ const Home = async () => {
           ))}
         </div>
       </div>
-
-      <Footer />
     </div>
   )
 }
