@@ -41,7 +41,7 @@
     @apply border-border antialiased;
   }
   html {
-    @apply h-full
+    @apply min-h-screen
   }
   body {
     @apply h-full bg-background text-foreground;

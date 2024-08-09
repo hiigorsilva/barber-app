@@ -111,19 +111,19 @@ export const SidebarSheet = () => {
       {/* LINKS DE SERVIÇOS */}
       <div className="flex flex-col gap-2 border-b border-solid pb-5">
         {quicksSearchOptions.map((option) => (
-          <Button
-            key={option.title}
-            variant="ghost"
-            className="justify-start gap-2"
-          >
-            <Image
-              src={option.imageUrl}
-              alt={option.title}
-              height={18}
-              width={18}
-            />
-            {option.title}
-          </Button>
+          <SheetClose key={option.title} asChild>
+            <Button className="justify-start gap-2" variant="ghost" asChild>
+              <Link href={`/barbershops?service=${option.title}`}>
+                <Image
+                  src={option.imageUrl}
+                  alt={option.title}
+                  height={18}
+                  width={18}
+                />
+                {option.title}
+              </Link>
+            </Button>
+          </SheetClose>
         ))}
       </div>
 

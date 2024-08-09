@@ -6,6 +6,7 @@ import { BarbershopItem } from "./_components/BarbershopItem"
 import { quicksSearchOptions } from "./_constants/search"
 import { BookingItem } from "./_components/BookingItem"
 import { Search } from "./_components/Search"
+import Link from "next/link"
 
 const Home = async () => {
   // chamar banco de dados
@@ -38,14 +39,17 @@ const Home = async () => {
               key={option.title}
               className="space-x-2"
               variant={"secondary"}
+              asChild
             >
-              <Image
-                src={option.imageUrl}
-                width={16}
-                height={16}
-                alt={option.title}
-              />
-              <span>{option.title}</span>
+              <Link href={`/barbershops?service=${option.title}`}>
+                <Image
+                  src={option.imageUrl}
+                  width={16}
+                  height={16}
+                  alt={option.title}
+                />
+                <span>{option.title}</span>
+              </Link>
             </Button>
           ))}
         </div>
