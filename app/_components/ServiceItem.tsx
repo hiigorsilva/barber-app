@@ -30,6 +30,7 @@ interface ServiceItemProps {
 }
 
 const getTimeList = (bookings: Booking[]) => {
+  // TODO: Não exibir horários no passado
   return TIME_LIST.filter((time) => {
     // ["09":"00"]
     const hour = Number(time.split(":")[0])
