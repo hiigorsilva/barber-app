@@ -81,7 +81,9 @@ export const SidebarSheet = () => {
       </div>
 
       {/* LINKS DE SERVIÇOS */}
-      <div className="flex flex-col gap-2 border-b border-solid pb-5">
+      <div
+        className={`flex flex-col gap-2 ${data?.user && "border-b border-solid pb-5"}`}
+      >
         {quicksSearchOptions.map((option) => (
           <SheetClose key={option.title} asChild>
             <Button className="justify-start gap-2" variant="ghost" asChild>
@@ -100,16 +102,18 @@ export const SidebarSheet = () => {
       </div>
 
       {/* LOGOUT */}
-      <div className="flex flex-col gap-2">
-        <Button
-          variant="ghost"
-          className="justify-start gap-2"
-          onClick={handleLogoutClick}
-        >
-          <LogOutIcon size={18} />
-          Sair da conta
-        </Button>
-      </div>
+      {data?.user && (
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="ghost"
+            className="justify-start gap-2"
+            onClick={handleLogoutClick}
+          >
+            <LogOutIcon size={18} />
+            Sair da conta
+          </Button>
+        </div>
+      )}
     </SheetContent>
   )
 }
