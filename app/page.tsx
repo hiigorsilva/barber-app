@@ -110,7 +110,7 @@ const Home = async () => {
                 key={booking.id}
                 className={`${confirmedBookings.length > 1 ? "min-w-[90%]" : "min-w-full"} pb-2`}
               >
-                <BookingItem booking={booking} />
+                <BookingItem booking={JSON.parse(JSON.stringify(booking))} />
               </div>
             ))}
           </div>
