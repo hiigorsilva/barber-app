@@ -44,7 +44,7 @@
     @apply min-h-screen
   }
   body {
-    @apply h-full bg-background text-foreground;
+    @apply min-h-[100dvh] flex flex-col bg-background text-foreground;
   }
 }
 
