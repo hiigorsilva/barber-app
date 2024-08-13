@@ -99,7 +99,10 @@ const Home = async () => {
 
         <div className="flex items-center gap-3 overflow-x-auto pr-5">
           {confirmedBookings.map((booking) => (
-            <div key={booking.id} className="min-w-[90%] pb-2">
+            <div
+              key={booking.id}
+              className={`${confirmedBookings.length > 1 ? "min-w-[90%]" : "min-w-full"} pb-2`}
+            >
               <BookingItem booking={booking} />
             </div>
           ))}
