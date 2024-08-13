@@ -14,9 +14,9 @@ import {
 } from "./ui/sheet"
 import { Calendar } from "./ui/calendar"
 import { ptBR } from "date-fns/locale"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { TIME_LIST } from "../_constants/timeListForBookings"
-import { format, set } from "date-fns"
+import { format, isPast, isToday, set } from "date-fns"
 import { createBookin } from "../_actions/createBooking"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
@@ -29,12 +29,21 @@ interface ServiceItemProps {
   barbershop: Pick<Barbershop, "name">
 }
 
-const getTimeList = (bookings: Booking[]) => {
-  // TODO: Não exibir horários no passado
+interface GetTimeListProps {
+  bookings: Booking[]
+  selectedDay: Date
+}
+
+const getTimeList = ({ bookings, selectedDay }: GetTimeListProps) => {
   return TIME_LIST.filter((time) => {
     // ["09":"00"]
     const hour = Number(time.split(":")[0])
     const minutes = Number(time.split(":")[1])
+
+    const timeIsOnThePast = isPast(set(new Date(), { hours: hour, minutes }))
+    if (timeIsOnThePast && isToday(selectedDay)) {
+      return false
+    }
 
     const hasBookingOnCurrentTime = bookings.some(
       (booking) =>
@@ -115,6 +124,14 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
       toast.error("Erro ao criar reserva!")
     }
   }
+
+  const timeList = useMemo(() => {
+    if (!selectedDay) return []
+    return getTimeList({
+      bookings: dayBookings,
+      selectedDay,
+    })
+  }, [dayBookings, selectedDay])
 
   return (
     <>
@@ -200,18 +217,24 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                   {selectedDay && (
                     <div className="border-b border-solid py-5 pl-5">
                       <div className="flex gap-2.5 overflow-x-auto pb-2 pr-5">
-                        {getTimeList(dayBookings).map((time) => (
-                          <Button
-                            key={time}
-                            variant={
-                              selectedTime === time ? "default" : "outline"
-                            }
-                            className="rounded-full border border-solid"
-                            onClick={() => handleTimeSelect(time)}
-                          >
-                            {time}
-                          </Button>
-                        ))}
+                        {timeList.length > 0 &&
+                          timeList.map((time) => (
+                            <Button
+                              key={time}
+                              variant={
+                                selectedTime === time ? "default" : "outline"
+                              }
+                              className="rounded-full border border-solid"
+                              onClick={() => handleTimeSelect(time)}
+                            >
+                              {time}
+                            </Button>
+                          ))}
+                        {timeList.length <= 0 && (
+                          <p className="text-xs">
+                            Não há horários disponíveis para este dia.
+                          </p>
+                        )}
                       </div>
                     </div>
                   )}
