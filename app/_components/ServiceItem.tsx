@@ -132,10 +132,6 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
             Ver agendamentos
           </Button>
         ),
-        // action: {
-        //   label: "Ver agendamentos",
-        //   onClick: () => router.push("/bookings"),
-        // }
       })
     } catch (err) {
       console.error(err)
