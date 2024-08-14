@@ -16,13 +16,14 @@ import { Calendar } from "./ui/calendar"
 import { ptBR } from "date-fns/locale"
 import { useEffect, useMemo, useState } from "react"
 import { TIME_LIST } from "../_constants/timeListForBookings"
-import { format, isPast, isToday, set } from "date-fns"
+import { isPast, isToday, set } from "date-fns"
 import { createBookin } from "../_actions/createBooking"
 import { useSession } from "next-auth/react"
 import { toast } from "sonner"
 import { getBookings } from "../_actions/getBookings"
 import { Dialog, DialogContent } from "./ui/dialog"
 import { SigInDialog } from "./SignInDialog"
+import { BookingSummary } from "./BookingSummary"
 
 interface ServiceItemProps {
   service: BarbershopService
@@ -79,6 +80,14 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
     fetch()
   }, [selectedDay, service.id])
 
+  const selectedDate = useMemo(() => {
+    if (!selectedDay || !selectedTime) return
+    return set(selectedDay, {
+      hours: Number(selectedTime?.split(":")[0]),
+      minutes: Number(selectedTime?.split(":")[1]),
+    })
+  }, [selectedDay, selectedTime])
+
   const handleBookingClick = () => {
     if (data?.user) {
       return setBookingSheetIsOpen(true)
@@ -103,19 +112,11 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
 
   const handleCreateBooking = async () => {
     try {
-      if (!selectedDay || !selectedTime) return
-
-      // Selecionando a hora e os minutos: ["09":"00"]
-      const hour = Number(selectedTime.split(":")[0])
-      const minute = Number(selectedTime.split(":")[1])
-      const newDate = set(selectedDay, {
-        minutes: minute,
-        hours: hour,
-      })
+      if (!selectedDate) return
 
       await createBookin({
         serviceId: service.id,
-        date: newDate,
+        date: selectedDate,
       })
       handleBookingSheetOpenChange()
       toast.success("Reserva criada com sucesso!")
@@ -240,41 +241,13 @@ export const ServiceItem = ({ service, barbershop }: ServiceItemProps) => {
                   )}
 
                   {/* RESUMO DA RESERVA */}
-                  {selectedTime && selectedDay && (
+                  {selectedDate && (
                     <div className="p-5">
-                      <Card>
-                        <CardContent className="space-y-3 p-3">
-                          <div className="flex items-center justify-between gap-3">
-                            <h2 className="font-semibold">{service.name}</h2>
-                            <p className="text-sm font-semibold">
-                              {formatCurrencyToBRL(Number(service.price))}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-3">
-                            <h2 className="text-sm text-zinc-400">Data</h2>
-                            <p className="text-sm text-zinc-400">
-                              {format(selectedDay, "d 'de' MMMM", {
-                                locale: ptBR,
-                              })}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-3">
-                            <h2 className="text-sm text-zinc-400">Horário</h2>
-                            <p className="text-sm text-zinc-400">
-                              {selectedTime}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center justify-between gap-3">
-                            <h2 className="text-sm text-zinc-400">Barbearia</h2>
-                            <p className="text-sm text-zinc-400">
-                              {barbershop.name}
-                            </p>
-                          </div>
-                        </CardContent>
-                      </Card>
+                      <BookingSummary
+                        barbershop={barbershop}
+                        service={service}
+                        selectedDate={selectedDate}
+                      />
                     </div>
                   )}
                   <SheetFooter className="mt-5 px-5">

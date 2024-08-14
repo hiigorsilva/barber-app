@@ -16,7 +16,6 @@ import {
   SheetTrigger,
 } from "./ui/sheet"
 import Image from "next/image"
-import { formatCurrencyToBRL } from "../_functions/formatCurrency"
 import { PhoneItem } from "./PhoneItem"
 import { Button } from "./ui/button"
 import {
@@ -32,6 +31,7 @@ import {
 import { deleteBooking } from "../_actions/deleteBooking"
 import { toast } from "sonner"
 import { useState } from "react"
+import { BookingSummary } from "./BookingSummary"
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -148,39 +148,13 @@ export const BookingItem = ({ booking }: BookingItemProps) => {
             </Badge>
 
             {/* RESUMO DA RESERVA */}
-            <Card className="mb-6 mt-3">
-              <CardContent className="space-y-3 p-3">
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="font-semibold">{booking.service.name}</h2>
-                  <p className="text-sm font-semibold">
-                    {formatCurrencyToBRL(Number(booking.service.price))}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-sm text-zinc-400">Data</h2>
-                  <p className="text-sm text-zinc-400">
-                    {format(booking.date, "d 'de' MMMM", {
-                      locale: ptBR,
-                    })}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-sm text-zinc-400">Horário</h2>
-                  <p className="text-sm text-zinc-400">
-                    {format(booking.date, "HH:mm", {
-                      locale: ptBR,
-                    })}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-sm text-zinc-400">Barbearia</h2>
-                  <p className="text-sm text-zinc-400">{barbershop.name}</p>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="mb-6 mt-3">
+              <BookingSummary
+                barbershop={barbershop}
+                service={booking.service}
+                selectedDate={booking.date}
+              />
+            </div>
 
             {/* PHONES */}
             <div className="space-y-3">
